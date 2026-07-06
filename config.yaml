@@ -1,0 +1,69 @@
+# config.yaml
+
+# Where the vocab(s) will be written
+src_vocab: run/source.vocab
+tgt_vocab: run/target.vocab
+overwrite: False
+
+# Training files
+data:
+    corpus_1:
+        path_src: file.src-filtered.src.subword.train
+        path_tgt: file.trg-filtered.trg.subword.train
+        transforms: [filtertoolong]
+    valid:
+        path_src: file.src-filtered.src.subword.dev
+        path_tgt: file.trg-filtered.trg.subword.dev
+        transforms: [filtertoolong]
+
+# Tokenization
+src_subword_model: source.model
+tgt_subword_model: target.model
+
+# Filtering
+src_seq_length: 150
+tgt_seq_length: 150
+
+# Model architecture
+model:
+  architecture: transformer
+  enc_layers: 6
+  dec_layers: 6
+  heads: 8
+  hidden_size: 512
+  word_vec_size: 512
+  transformer_ff: 2048
+  position_encoding: true
+  dropout: 0.1
+  attention_dropout: 0.1
+
+# Training
+training:
+  world_size: 1
+  gpu_ranks: [0]
+  model_path: models/model.fren
+  save_checkpoint_steps: 1000
+  train_steps: 3000
+  valid_steps: 1000
+  warmup_steps: 1000
+  report_every: 100
+  seed: 3435
+  early_stopping: 4
+  model_dtype: "fp16"
+  batch_type: "tokens"
+  batch_size: 4096
+  valid_batch_size: 2048
+  max_generator_batches: 2
+  accum_count: [4]
+  accum_steps: [0]
+  bucket_size: 262144
+  num_workers: 0
+  optim: "adam"
+  learning_rate: 2
+  decay_method: "noam"
+  adam_beta2: 0.998
+  max_grad_norm: 0
+  label_smoothing: 0.1
+  param_init: 0
+  param_init_glorot: true
+  normalization: "tokens"
